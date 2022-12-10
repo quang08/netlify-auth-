@@ -15,6 +15,7 @@ const AuthContext = createContext({
 //wrap the whole context for the app
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [authReady, setAuthReady] = useState(false);
 
   useEffect(() => {
     netlifyIdentity.on("login", (user) => {
@@ -29,8 +30,15 @@ export const AuthContextProvider = ({ children }) => {
       console.log("logout event");
     });
 
+    //signaling a connection with netlify server has been established
+    netlifyIdentity.on('init', (user) => {
+        setUser(user);
+        setAuthReady(true);
+        console.log('init event');
+    })
+
     netlifyIdentity.init(); //init netlify identity connection
-    
+
     return () => {
       //unregister event listener
       netlifyIdentity.off("login");
@@ -52,6 +60,7 @@ export const AuthContextProvider = ({ children }) => {
     user: user,
     login: login,
     logout: logout,
+    authReady: authReady
   };
 
   return (
