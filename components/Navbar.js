@@ -1,11 +1,11 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { useContext } from 'react'
-import AuthContext from '../stores/authContext'
+import Link from "next/link";
+import Image from "next/image";
+import { useContext } from "react";
+import AuthContext from "../stores/authContext";
 
 export default function Navbar() {
   //invoke context and extract value from AuthContext.Provider
-  const {user, login, logout} = useContext(AuthContext); //will be whatever we passed in the AuthContext.Provider
+  const { user, login, logout } = useContext(AuthContext); //will be whatever we passed in the AuthContext.Provider
   console.log(user);
 
   return (
@@ -20,12 +20,17 @@ export default function Navbar() {
           <li>
             <Link href="/guides">Guides</Link>
           </li>
-          <li onClick={login} className="btn">
-            Login/Signup
-          </li>
-          <li onClick={logout} className="btn">
-            Logout
-          </li>
+          {!user && ( //if user = null
+            <li onClick={login} className="btn">
+              Login/Signup
+            </li>
+          )}
+          {user && <li>{user.email}</li>}
+          {user && ( //if user != null
+            <li onClick={logout} className="btn">
+              Logout
+            </li>
+          )}
         </ul>
       </nav>
       <div className="banner">
